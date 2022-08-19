@@ -125,10 +125,7 @@ def generateRunFile(segmentFiles):
         segments = segmentXml.findall("Segments")[0]
         for j in range(len(segments)):
             # if this is a duplicate of previous segment, ignore it
-            print("Previous Segment: " + runSegments[-1].findall("Name")[0].text)
-            print("Current Segment: " + segments[j].findall("Name")[0].text)
             if "}" in runSegments[-1].findall("Name")[0].text:
-                print("Cut header: " + runSegments[-1].findall("Name")[0].text.split("}")[1])
                 if segments[j].findall("Name")[0].text == runSegments[-1].findall("Name")[0].text.split("}")[1]:
                     continue
 
