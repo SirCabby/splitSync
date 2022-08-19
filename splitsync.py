@@ -60,19 +60,13 @@ def getAllSplitFiles():
     return filesDict
 
 def fileSelect():
-    print("Please select your full run file. Press any key to continue...")
-    click.getchar()
     Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
     filename = askopenfilename(initialdir=os.getcwd()) # show an "Open" dialog box and return the path to the selected file
-    if filename == "":
-        print("No file selected for full run. Aborting...")
-        exit()
-    print(filename)
     return filename
 
 def dirSelect():
     Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
-    folderName = filedialog.askdirectory(initialdir=os.getcwd()) # show an "Open" dialog box and return the path to the selected file
+    folderName = filedialog.askdirectory(initialdir=os.getcwd()) # show an "Open" dialog box and return the path to the selected folder
     return folderName
 
 def generateOutputFolder():
@@ -189,11 +183,32 @@ def generateRun():
     generateRunFile(segmentFiles)
     return
 
+def outputSegmentTimes():
+    print("Please select the segment file to output. Press any key to continue...")
+    click.getchar()
+    filename = fileSelect()
+    if filename == "":
+        print("No file selected for segment output. Aborting...")
+        exit()
+    print(filename)
+
+    tree = ET.parse(filename)
+    segmentXml = tree.getroot()
+    segments = segmentXml.findall("Segments")[0]
+    for segment in segments:
+        splitTime = segment.findall("SplitTimes")[0][0].findall("RealTime")[0].text
+        splitTime = splitTime.replace("00:", "")
+        splitTime = splitTime.lstrip("0")
+        dotIndex = splitTime.index(".")
+        splitTime = splitTime[:dotIndex + 3]
+        print(splitTime)
+    return
+
 def displayMenu():
     print("Which action to perform?\n1. Output Segment Times for Spreadsheet\n2. Sync Gold Splits\n3. Generate run file from segment files\n4. Add run PB comparison to segment files\ne. Exit\n")
     menuInput = click.getchar()
     if menuInput == "1":
-        print("not implemented")
+        outputSegmentTimes()
         return
     if menuInput == "2":
         print("not implemented")
