@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Run version="1.7.0">
+  <GameIcon />
+  <GameName>Super Metroid Practice</GameName>
+  <CategoryName>07 - Cac Alley East to LN</CategoryName>
+  <LayoutPath>
+  </LayoutPath>
+  <Metadata>
+    <Run id="" />
+    <Platform usesEmulator="False">
+    </Platform>
+    <Region>
+    </Region>
+    <Variables />
+  </Metadata>
+  <Offset>00:00:00</Offset>
+  <AttemptCount>1</AttemptCount>
+  <AttemptHistory>
+    <Attempt id="1" started="12/19/2021 04:06:14" isStartedSynced="True" ended="12/19/2021 04:11:34" isEndedSynced="True">
+      <RealTime>00:05:20.1390000</RealTime>
+      <GameTime>00:03:12.8830000</GameTime>
+    </Attempt>
+  </AttemptHistory>
+  <Segments>
+    <Segment>
+      <Name>Cac Alley Entrance</Name>
+      <Icon />
+      <SplitTimes>
+        <SplitTime name="Personal Best">
+          <RealTime>00:00:01.9370000</RealTime>
+          <GameTime>00:00:01.2000000</GameTime>
+        </SplitTime>
+        <SplitTime name="Kuru">
+          <RealTime>00:00:01.3600000</RealTime>
+        </SplitTime>
+      </SplitTimes>
+      <BestSegmentTime>
+        <RealTime>00:00:01.9370000</RealTime>
+        <GameTime>00:00:01.2000000</GameTime>
+      </BestSegmentTime>
+      <SegmentHistory>
+        <Time id="1">
+          <RealTime>00:00:01.9370000</RealTime>
+          <GameTime>00:00:01.2000000</GameTime>
+        </Time>
+      </SegmentHistory>
+    </Segment>
+    <Segment>
+      <Name>Butterfly Room</Name>
+      <Icon />
+      <SplitTimes>
+        <SplitTime name="Personal Best">
+          <RealTime>00:00:26.2800000</RealTime>
+          <GameTime>00:00:19.0500000</GameTime>
+        </SplitTime>
+        <SplitTime name="Kuru">
+          <RealTime>00:00:21.4200000</RealTime>
+        </SplitTime>
+      </SplitTimes>
+      <BestSegmentTime>
+        <RealTime>00:00:24.3430000</RealTime>
+        <GameTime>00:00:17.8500000</GameTime>
+      </BestSegmentTime>
+      <SegmentHistory>
+        <Time id="1">
+          <RealTime>00:00:24.3430000</RealTime>
+          <GameTime>00:00:17.8500000</GameTime>
+        </Time>
+      </SegmentHistory>
+    </Segment>
+    <Segment>
+      <Name>Plasma Beam</Name>
+      <Icon />
+      <SplitTimes>
+        <SplitTime name="Personal Best">
+          <RealTime>00:01:06.1070000</RealTime>
+          <GameTime>00:00:43.9830000</GameTime>
+        </SplitTime>
+        <SplitTime name="Kuru">
+          <RealTime>00:00:58.2200000</RealTime>
+        </SplitTime>
+      </SplitTimes>
+      <BestSegmentTime>
+        <RealTime>00:00:39.8270000</RealTime>
+        <GameTime>00:00:24.9330000</GameTime>
+      </BestSegmentTime>
+      <SegmentHistory>
+        <Time id="1">
+          <RealTime>00:00:39.8270000</RealTime>
+          <GameTime>00:00:24.9330000</GameTime>
+        </Time>
+      </SegmentHistory>
+    </Segment>
+    <Segment>
+      <Name>Toilet Bowl</Name>
+      <Icon />
+      <SplitTimes>
+        <SplitTime name="Personal Best">
+          <RealTime>00:01:56.6220000</RealTime>
+          <GameTime>00:01:17.3330000</GameTime>
+        </SplitTime>
+        <SplitTime name="Kuru">
+          <RealTime>00:01:38.8600000</RealTime>
+        </SplitTime>
+      </SplitTimes>
+      <BestSegmentTime>
+        <RealTime>00:00:50.5150000</RealTime>
+        <GameTime>00:00:33.3500000</GameTime>
+      </BestSegmentTime>
+      <SegmentHistory>
+        <Time id="1">
+          <RealTime>00:00:50.5150000</RealTime>
+          <GameTime>00:00:33.3500000</GameTime>
+        </Time>
+      </SegmentHistory>
+    </Segment>
+    <Segment>
+      <Name>Business Center</Name>
+      <Icon />
+      <SplitTimes>
+        <SplitTime name="Personal Best">
+          <RealTime>00:02:50.9560000</RealTime>
+          <GameTime>00:01:50.2170000</GameTime>
+        </SplitTime>
+        <SplitTime name="Kuru">
+          <RealTime>00:02:26.5300000</RealTime>
+        </SplitTime>
+      </SplitTimes>
+      <BestSegmentTime>
+        <RealTime>00:00:54.3340000</RealTime>
+        <GameTime>00:00:32.8840000</GameTime>
+      </BestSegmentTime>
+      <SegmentHistory>
+        <Time id="1">
+          <RealTime>00:00:54.3340000</RealTime>
+          <GameTime>00:00:32.8840000</GameTime>
+        </Time>
+      </SegmentHistory>
+    </Segment>
+    <Segment>
+      <Name>Ice Beam</Name>
+      <Icon />
+      <SplitTimes>
+        <SplitTime name="Personal Best">
+          <RealTime>00:03:27.0130000</RealTime>
+          <GameTime>00:02:11.9170000</GameTime>
+        </SplitTime>
+        <SplitTime name="Kuru">
+          <RealTime>00:03:00.9400000</RealTime>
+        </SplitTime>
+      </SplitTimes>
+      <BestSegmentTime>
+        <RealTime>00:00:36.0570000</RealTime>
+        <GameTime>00:00:21.7000000</GameTime>
+      </BestSegmentTime>
+      <SegmentHistory>
+        <Time id="1">
+          <RealTime>00:00:36.0570000</RealTime>
+          <GameTime>00:00:21.7000000</GameTime>
+        </Time>
+      </SegmentHistory>
+    </Segment>
+    <Segment>
+      <Name>Kronic Boost Room</Name>
+      <Icon />
+      <SplitTimes>
+        <SplitTime name="Personal Best">
+          <RealTime>00:04:50.3300000</RealTime>
+          <GameTime>00:02:52.7500000</GameTime>
+        </SplitTime>
+        <SplitTime name="Kuru">
+          <RealTime>00:04:11.3900000</RealTime>
+        </SplitTime>
+      </SplitTimes>
+      <BestSegmentTime>
+        <RealTime>00:01:23.3170000</RealTime>
+        <GameTime>00:00:40.8330000</GameTime>
+      </BestSegmentTime>
+      <SegmentHistory>
+        <Time id="1">
+          <RealTime>00:01:23.3170000</RealTime>
+          <GameTime>00:00:40.8330000</GameTime>
+        </Time>
+      </SegmentHistory>
+    </Segment>
+    <Segment>
+      <Name>Main Hall</Name>
+      <Icon />
+      <SplitTimes>
+        <SplitTime name="Personal Best">
+          <RealTime>00:05:20.1390000</RealTime>
+          <GameTime>00:03:12.8830000</GameTime>
+        </SplitTime>
+        <SplitTime name="Kuru">
+          <RealTime>00:04:36</RealTime>
+        </SplitTime>
+      </SplitTimes>
+      <BestSegmentTime>
+        <RealTime>00:00:29.8090000</RealTime>
+        <GameTime>00:00:20.1330000</GameTime>
+      </BestSegmentTime>
+      <SegmentHistory>
+        <Time id="1">
+          <RealTime>00:00:29.8090000</RealTime>
+          <GameTime>00:00:20.1330000</GameTime>
+        </Time>
+      </SegmentHistory>
+    </Segment>
+  </Segments>
+  <AutoSplitterSettings />
+</Run>
