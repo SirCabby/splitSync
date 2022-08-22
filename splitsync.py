@@ -20,22 +20,16 @@ BLANK_FILE_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <Run version=\"1.7.
 BLANK_SEGMENT_XML = "<Segment><Name /><Icon /><SplitTimes /><BestSegmentTime /><SegmentHistory /></Segment>"
 
 
-# inputs
-
-fullRunPath = "Test Data\\Super Metroid - Any% KPDR.lss"
-segmentsPath = "Test Data\\KPDR Segment Practice Splits v2_1"
-
-
 # functions
 
-def validateFullRunPath():
+def validateFullRunPath(fullRunPath):
     path = Path(fullRunPath)
     if not path.is_file():
         print("File was not found: " + fullRunPath)
         exit()
     return
 
-def validateSegmentsPath():
+def validateSegmentsPath(segmentsPath):
     path = Path(segmentsPath)
     if not path.is_dir():
         print("Directory for segment splits was not found: " + segmentsPath)
@@ -45,7 +39,7 @@ def validateSegmentsPath():
 def getSortedKeys(filesDict):
     return sorted(filesDict, key=lambda key: filesDict[key])
     
-def getAllSplitFiles():
+def getAllSplitFiles(segmentsPath):
     segmentFiles = [f for f in listdir(segmentsPath) if isfile(join(segmentsPath, f)) and f.startswith(FILE_PREFIX)]
     filesDict = {}
     for f in segmentFiles:
@@ -103,8 +97,7 @@ def generateCeresSegment(runSegments):
     createBlankSegmentWithName(runSegments, "{00 - Ceres Escape}Landing Site")
     return
 
-def generateRunFile(segmentFiles):
-    tree = ET.parse("Test Data\\Super Metroid blank.lss")
+def generateRunFile(segmentsPath, segmentFiles):
     runXML = ET.fromstring(BLANK_FILE_XML)
     runSegments = runXML.findall("Segments")[0]
 
@@ -157,14 +150,14 @@ def generateRunFile(segmentFiles):
 def generateRun():
     print("Please select a directory containing segment files. Press any key to continue...")
     click.getchar()
-    folderName = dirSelect()
-    if folderName == "":
+    segmentsPath = dirSelect()
+    if segmentsPath == "":
         print("No folder selected for segment files. Aborting...")
         exit()
-    print(folderName)
+    print(segmentsPath)
 
-    validateSegmentsPath()
-    segmentFiles = getAllSplitFiles()
+    validateSegmentsPath(segmentsPath)
+    segmentFiles = getAllSplitFiles(segmentsPath)
     sortedKeys = getSortedKeys(segmentFiles)
 
     print("Found segment files (sorted):")
@@ -180,7 +173,7 @@ def generateRun():
     hasSequentialSegments(sortedKeys)
 
     print("Merging into a single run file...")
-    generateRunFile(segmentFiles)
+    generateRunFile(segmentsPath, segmentFiles)
     return
 
 def outputSegmentTimes():
