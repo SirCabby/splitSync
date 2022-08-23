@@ -115,7 +115,7 @@ def generateCeresSegment(runSegments):
     createBlankSegmentWithName(runSegments, "{00 - Ceres Escape}Landing Site", "00:02:01.0000000", "00:00:31.0000000")
     return
 
-def padSplitTime(split, adjustment, isAdd = True, updatePadTime = False):
+def padSplitTime(split, adjustment, isAdd = True):
     global padAmount
     origTime = split.text.split(".")
     dtSplit = datetime.strptime(origTime[0], "%H:%M:%S")
@@ -129,16 +129,12 @@ def padSplitTime(split, adjustment, isAdd = True, updatePadTime = False):
         dtSplit = dtSplit - timedelta(minutes = padSplit.minute)
         dtSplit = dtSplit - timedelta(hours = padSplit.hour)
     split.text = dtSplit.strftime("%H:%M:%S") + "." + origTime[1]
-
-    if updatePadTime:
-        print("Updated padTime: " + split.text)
-        padAmount = split.text
     return
 
-def adjustSplitTime(segmentName, split, isSplit):
+def adjustSplitTime(segmentName, split):
     if segmentName in adjustments.keys():
         adjustment = adjustments[segmentName]
-        padSplitTime(split, adjustment["diff"], adjustment["isAdd"], isSplit)
+        padSplitTime(split, adjustment["diff"], adjustment["isAdd"])
         adjustment["isUsed"] = True
     return
 
@@ -182,8 +178,8 @@ def generateRunFile(segmentsPath, segmentFiles):
                     segNode[0].attrib["name"] = SEGMENT_PB
 
                     timeNode = segNode[0].findall("RealTime")[0]
-                    padSplitTime(timeNode, padAmount, True, False)
-                    adjustSplitTime(segName, timeNode, True)
+                    padSplitTime(timeNode, padAmount, True)
+                    adjustSplitTime(segName, timeNode)
 
                     if j == len(segments) - 1:
                         padAmount = timeNode.text
@@ -206,9 +202,9 @@ def generateRunFile(segmentsPath, segmentFiles):
                     
                     # Special case from adding Ceres
                     if segName == "Morph Ball":
-                        padSplitTime(segNode[0], "00:00:14.0000000", True, False)
+                        padSplitTime(segNode[0], "00:00:14.0000000", True)
                     else:
-                        adjustSplitTime(segName, segNode[0], False)
+                        adjustSplitTime(segName, segNode[0])
 
                     newSegment.append(segNode)
                     continue
