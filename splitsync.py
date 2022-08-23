@@ -29,6 +29,7 @@ padAmount = INIT_PAD_AMOUNT
 adjustments = {
     "Charge Beam Missile": {"diff": "00:00:16.0000000", "isAdd": True, "isUsed": False},
     "Leaving HJB": {"diff": "00:00:14.0000000", "isAdd": True, "isUsed": False},
+    "Red Tower": {"diff": "00:00:05.0000000", "isAdd": True, "isUsed": False},
     "West Ocean": {"diff": "00:00:21.0000000", "isAdd": True, "isUsed": False},
     "Botwoon's Room": {"diff": "00:00:05.0000000", "isAdd": False, "isUsed": False},
     "The Worst Room in the Game": {"diff": "00:00:10.0000000", "isAdd": True, "isUsed": False},
@@ -116,10 +117,11 @@ def generateCeresSegment(runSegments):
     return
 
 def padSplitTime(split, adjustment, isAdd = True):
-    global padAmount
     origTime = split.text.split(".")
+
     dtSplit = datetime.strptime(origTime[0], "%H:%M:%S")
     padSplit = datetime.strptime(adjustment.split(".")[0], "%H:%M:%S")
+
     if isAdd:
         dtSplit = dtSplit + timedelta(seconds = padSplit.second)
         dtSplit = dtSplit + timedelta(minutes = padSplit.minute)
@@ -128,6 +130,7 @@ def padSplitTime(split, adjustment, isAdd = True):
         dtSplit = dtSplit - timedelta(seconds = padSplit.second)
         dtSplit = dtSplit - timedelta(minutes = padSplit.minute)
         dtSplit = dtSplit - timedelta(hours = padSplit.hour)
+
     split.text = dtSplit.strftime("%H:%M:%S") + "." + origTime[1]
     return
 
@@ -183,6 +186,7 @@ def generateRunFile(segmentsPath, segmentFiles):
 
                     if j == len(segments) - 1:
                         padAmount = timeNode.text
+
                     newSplitTimes.append(segNode[0])
                     continue
                 if segNode.tag == "SegmentHistory":
