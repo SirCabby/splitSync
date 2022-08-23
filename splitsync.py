@@ -21,7 +21,7 @@ FILE_REGEX = re.compile("- (\\d{2}) -")
 BLANK_FILE_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <Run version=\"1.7.0\"> <GameIcon></GameIcon> <GameName>Super Metroid</GameName> <CategoryName>Any%</CategoryName> <Metadata> <Run id=\"\" /> <Platform usesEmulator=\"True\">Super Nintendo</Platform> <Region> </Region> <Variables> <Variable name=\"Route\">KPDR</Variable> <Variable name=\"Region\">NTSC</Variable> </Variables> </Metadata> <Offset>00:00:00</Offset> <AttemptCount>0</AttemptCount> <AttemptHistory> </AttemptHistory> <Segments> </Segments> <AutoSplitterSettings /> </Run>"
 BLANK_SEGMENT_XML = "<Segment><Name /><Icon /><SplitTimes><SplitTime><RealTime /></SplitTime></SplitTimes><BestSegmentTime><RealTime /></BestSegmentTime><SegmentHistory /></Segment>"
 INIT_PAD_AMOUNT = "00:02:15.0000000"
-SEGMENT_PB = "Segment PB"
+SEGMENT_PB = "Spliced PB"
 
 # fields
 
