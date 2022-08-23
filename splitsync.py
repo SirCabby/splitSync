@@ -26,9 +26,10 @@ CERES_PAD_AMOUNT = "00:02:15.0000000"
 
 padAmount = CERES_PAD_AMOUNT
 
+
 # functions
 
-def validateFullRunPath(fullRunPath):
+def validateFilePath(fullRunPath):
     path = Path(fullRunPath)
     if not path.is_file():
         print("File was not found: " + fullRunPath)
@@ -170,7 +171,7 @@ def generateRunFile(segmentsPath, segmentFiles):
 
     return
 
-def generateRun():
+def getSegmentsDir():
     print("Please select a directory containing segment files. Press any key to continue...")
     click.getchar()
     segmentsPath = dirSelect()
@@ -178,8 +179,8 @@ def generateRun():
         print("No folder selected for segment files. Aborting...")
         exit()
     print(segmentsPath)
-
     validateSegmentsPath(segmentsPath)
+
     segmentFiles = getAllSplitFiles(segmentsPath)
     sortedKeys = getSortedKeys(segmentFiles)
 
@@ -194,37 +195,40 @@ def generateRun():
         exit()
 
     hasSequentialSegments(sortedKeys)
+    return segmentsPath, segmentFiles
 
+def generateRun():
+    segmentsPath, segmentFiles = getSegmentsDir()
+    
     print("Merging into a single run file...")
     generateRunFile(segmentsPath, segmentFiles)
     return
 
 def outputSegmentTimes():
-    print("Please select the segment file to output. Press any key to continue...")
-    click.getchar()
-    filename = fileSelect()
-    if filename == "":
-        print("No file selected for segment output. Aborting...")
-        exit()
-    print(filename)
+    segmentsPath, segmentFiles = getSegmentsDir()
 
-    tree = ET.parse(filename)
-    segmentXml = tree.getroot()
-    segments = segmentXml.findall("Segments")[0]
+    # for loop to add each segment's splits
     outputStr = ""
-    for segment in segments:
-        splitTime = segment.findall("SplitTimes")[0][0].findall("RealTime")[0].text
-        splitTime = splitTime.replace("00:", "")
-        splitTime = splitTime.lstrip("0")
-        dotIndex = splitTime.index(".")
-        splitTime = splitTime[:dotIndex + 3]
-        outputStr = outputStr + splitTime + "\n"
+    for i in range(len(segmentFiles)):
+        segmentPath = os.path.join(segmentsPath, segmentFiles[i + 1])
+        tree = ET.parse(segmentPath)
+        segmentXml = tree.getroot()
+        segments = segmentXml.findall("Segments")[0]
+        for segment in segments:
+            splitTime = segment.findall("SplitTimes")[0][0].findall("RealTime")[0].text
+            splitTime = splitTime.replace("00:", "")
+            splitTime = splitTime.lstrip("0")
+            dotIndex = splitTime.index(".")
+            splitTime = splitTime[:dotIndex + 3]
+            outputStr = outputStr + splitTime + "\n"
+        outputStr = outputStr + "\n"
     
     pyperclip.copy(outputStr)
     print("Segment Times have been copied to your clipboard")
     return
 
 def displayMenu():
+    print("")
     print("Which action to perform?\n1. Output Segment Times for Spreadsheet\n2. Sync Gold Splits\n3. Generate run file from segment files\n4. Add run PB comparison to segment files\ne. Exit\n")
     menuInput = click.getchar()
     if menuInput == "1":
