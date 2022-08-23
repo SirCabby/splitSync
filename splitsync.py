@@ -10,15 +10,20 @@ import click
 from tkinter import Tk
 from tkinter.filedialog import askopenfilename
 from tkinter import filedialog
-import datetime;
+import datetime
+from datetime import *
 
 # constants
 
 FILE_PREFIX = "Super Metroid Practice - "
 FILE_REGEX = re.compile("- (\\d{2}) -")
 BLANK_FILE_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <Run version=\"1.7.0\"> <GameIcon></GameIcon> <GameName>Super Metroid</GameName> <CategoryName>Any%</CategoryName> <Metadata> <Run id=\"\" /> <Platform usesEmulator=\"True\">Super Nintendo</Platform> <Region> </Region> <Variables> <Variable name=\"Route\">KPDR</Variable> <Variable name=\"Region\">NTSC</Variable> </Variables> </Metadata> <Offset>00:00:00</Offset> <AttemptCount>0</AttemptCount> <AttemptHistory> </AttemptHistory> <Segments> </Segments> <AutoSplitterSettings /> </Run>"
-BLANK_SEGMENT_XML = "<Segment><Name /><Icon /><SplitTimes /><BestSegmentTime /><SegmentHistory /></Segment>"
+BLANK_SEGMENT_XML = "<Segment><Name /><Icon /><SplitTimes><SplitTime name=\"Personal Best\"><RealTime /></SplitTime></SplitTimes><BestSegmentTime><RealTime /></BestSegmentTime><SegmentHistory /></Segment>"
+CERES_PAD_AMOUNT = "00:02:50.0000000"
 
+# fields
+
+padAmount = CERES_PAD_AMOUNT
 
 # functions
 
@@ -68,7 +73,7 @@ def generateOutputFolder():
     if not path.is_dir():
         os.mkdir("Output")
     
-    ct = os.path.join("Output", datetime.datetime.now().strftime("%Y-%m-%d %H.%M.%S"))
+    ct = os.path.join("Output", datetime.now().strftime("%Y-%m-%d %H.%M.%S"))
     os.mkdir(ct)
 
     return ct
@@ -84,20 +89,34 @@ def hasSequentialSegments(sortedKeys):
         i = i + 1
     return
 
-def createBlankSegmentWithName(runSegments, Name):
+def createBlankSegmentWithName(runSegments, name, split, best):
     newSegment = ET.fromstring(BLANK_SEGMENT_XML)
-    newSegment.findall("Name")[0].text = Name
+    newSegment.findall("Name")[0].text = name
+    newSegment.findall("SplitTimes")[0][0].findall("RealTime")[0].text = split
+    newSegment.findall("BestSegmentTime")[0].findall("RealTime")[0].text = best
     runSegments.append(newSegment)
     return
 
 def generateCeresSegment(runSegments):
-    createBlankSegmentWithName(runSegments, "-Ceres Ridley")
-    createBlankSegmentWithName(runSegments, "-Ridley Escape")
-    createBlankSegmentWithName(runSegments, "-Ceres Escape")
-    createBlankSegmentWithName(runSegments, "{00 - Ceres Escape}Landing Site")
+    createBlankSegmentWithName(runSegments, "-Ceres Ridley", "00:00:40.0000000", "00:00:40.0000000")
+    createBlankSegmentWithName(runSegments, "-Ridley Escape", "00:01:20.0000000", "00:00:40.0000000")
+    createBlankSegmentWithName(runSegments, "-Ceres Escape", "00:02:00.0000000", "00:00:40.0000000")
+    createBlankSegmentWithName(runSegments, "{00 - Ceres Escape}Landing Site", CERES_PAD_AMOUNT, "00:00:50.0000000")
+    return
+
+def padSplitTime(split):
+    origTime = split.text.split(".")
+    dtSplit = datetime.strptime(origTime[0], "%H:%M:%S")
+    padSplit = datetime.strptime(padAmount.split(".")[0], "%H:%M:%S")
+    dtSplit = dtSplit + timedelta(seconds = padSplit.second)
+    dtSplit = dtSplit + timedelta(minutes = padSplit.minute)
+    dtSplit = dtSplit + timedelta(hours = padSplit.hour)
+    split.text = dtSplit.strftime("%H:%M:%S") + "." + origTime[1]
     return
 
 def generateRunFile(segmentsPath, segmentFiles):
+    global padAmount
+
     runXML = ET.fromstring(BLANK_FILE_XML)
     runSegments = runXML.findall("Segments")[0]
 
@@ -120,6 +139,9 @@ def generateRunFile(segmentsPath, segmentFiles):
             for segNode in segments[j]:
                 if segNode.tag == "SplitTimes":
                     newSplitTimes = ET.SubElement(newSegment, "SplitTimes")
+                    padSplitTime(segNode[0].findall("RealTime")[0])
+                    if j == len(segments) - 1:
+                        padAmount = segNode[0].findall("RealTime")[0].text
                     newSplitTimes.append(segNode[0])
                     continue
                 if segNode.tag == "SegmentHistory":
