@@ -19,8 +19,9 @@ import pyperclip
 FILE_PREFIX = "Super Metroid Practice - "
 FILE_REGEX = re.compile("- (\\d{2}) -")
 BLANK_FILE_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <Run version=\"1.7.0\"> <GameIcon></GameIcon> <GameName>Super Metroid</GameName> <CategoryName>Any%</CategoryName> <Metadata> <Run id=\"\" /> <Platform usesEmulator=\"True\">Super Nintendo</Platform> <Region> </Region> <Variables> <Variable name=\"Route\">KPDR</Variable> <Variable name=\"Region\">NTSC</Variable> </Variables> </Metadata> <Offset>00:00:00</Offset> <AttemptCount>0</AttemptCount> <AttemptHistory> </AttemptHistory> <Segments> </Segments> <AutoSplitterSettings /> </Run>"
-BLANK_SEGMENT_XML = "<Segment><Name /><Icon /><SplitTimes><SplitTime name=\"Personal Best\"><RealTime /></SplitTime></SplitTimes><BestSegmentTime><RealTime /></BestSegmentTime><SegmentHistory /></Segment>"
+BLANK_SEGMENT_XML = "<Segment><Name /><Icon /><SplitTimes><SplitTime><RealTime /></SplitTime></SplitTimes><BestSegmentTime><RealTime /></BestSegmentTime><SegmentHistory /></Segment>"
 CERES_PAD_AMOUNT = "00:02:15.0000000"
+SEGMENT_PB = "Segment PB"
 
 # fields
 
@@ -94,6 +95,7 @@ def hasSequentialSegments(sortedKeys):
 def createBlankSegmentWithName(runSegments, name, split, best):
     newSegment = ET.fromstring(BLANK_SEGMENT_XML)
     newSegment.findall("Name")[0].text = name
+    newSegment.findall("SplitTimes")[0][0].attrib["name"] = SEGMENT_PB
     newSegment.findall("SplitTimes")[0][0].findall("RealTime")[0].text = split
     newSegment.findall("BestSegmentTime")[0].findall("RealTime")[0].text = best
     runSegments.append(newSegment)
@@ -124,7 +126,7 @@ def generateRunFile(segmentsPath, segmentFiles):
 
     generateCeresSegment(runSegments)
 
-    # for loop to add each segment's splits
+    # add each segment's splits
     for i in range(len(segmentFiles)):
         segmentPath = os.path.join(segmentsPath, segmentFiles[i + 1])
         tree = ET.parse(segmentPath)
@@ -141,6 +143,7 @@ def generateRunFile(segmentsPath, segmentFiles):
             for segNode in segments[j]:
                 if segNode.tag == "SplitTimes":
                     newSplitTimes = ET.SubElement(newSegment, "SplitTimes")
+                    segNode[0].attrib["name"] = SEGMENT_PB
                     padSplitTime(segNode[0].findall("RealTime")[0])
                     if j == len(segments) - 1:
                         padAmount = segNode[0].findall("RealTime")[0].text
