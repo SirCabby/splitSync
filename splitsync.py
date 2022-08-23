@@ -12,6 +12,7 @@ from tkinter.filedialog import askopenfilename
 from tkinter import filedialog
 import datetime
 from datetime import *
+import pyperclip
 
 # constants
 
@@ -210,13 +211,17 @@ def outputSegmentTimes():
     tree = ET.parse(filename)
     segmentXml = tree.getroot()
     segments = segmentXml.findall("Segments")[0]
+    outputStr = ""
     for segment in segments:
         splitTime = segment.findall("SplitTimes")[0][0].findall("RealTime")[0].text
         splitTime = splitTime.replace("00:", "")
         splitTime = splitTime.lstrip("0")
         dotIndex = splitTime.index(".")
         splitTime = splitTime[:dotIndex + 3]
-        print(splitTime)
+        outputStr = outputStr + splitTime + "\n"
+    
+    pyperclip.copy(outputStr)
+    print("Segment Times have been copied to your clipboard")
     return
 
 def displayMenu():

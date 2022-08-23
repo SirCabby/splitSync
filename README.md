@@ -9,8 +9,8 @@ Read LiveSplit splits, merge data between full runs and segments.  This is inten
     - If it's not, edit your PATH environment variable to include the exe location
         - Review this guide for that: https://www.activestate.com/resources/quick-reads/how-to-install-pip-on-windows/
 4. Install any dependencies that are missing
-    - Likely not installed is "click", using this as the example:
-        - in the console, type: "pip install click"
+    - in the console, type: "pip install click"
+    - in the console, type: "pip install pyperclip"
     - Repeat for any other missing dependencies, which can be viewed at the top of the script file as imports
 
 # Usage
