@@ -19,7 +19,7 @@ FILE_PREFIX = "Super Metroid Practice - "
 FILE_REGEX = re.compile("- (\\d{2}) -")
 BLANK_FILE_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <Run version=\"1.7.0\"> <GameIcon></GameIcon> <GameName>Super Metroid</GameName> <CategoryName>Any%</CategoryName> <Metadata> <Run id=\"\" /> <Platform usesEmulator=\"True\">Super Nintendo</Platform> <Region> </Region> <Variables> <Variable name=\"Route\">KPDR</Variable> <Variable name=\"Region\">NTSC</Variable> </Variables> </Metadata> <Offset>00:00:00</Offset> <AttemptCount>0</AttemptCount> <AttemptHistory> </AttemptHistory> <Segments> </Segments> <AutoSplitterSettings /> </Run>"
 BLANK_SEGMENT_XML = "<Segment><Name /><Icon /><SplitTimes><SplitTime name=\"Personal Best\"><RealTime /></SplitTime></SplitTimes><BestSegmentTime><RealTime /></BestSegmentTime><SegmentHistory /></Segment>"
-CERES_PAD_AMOUNT = "00:02:50.0000000"
+CERES_PAD_AMOUNT = "00:02:15.0000000"
 
 # fields
 
@@ -98,10 +98,10 @@ def createBlankSegmentWithName(runSegments, name, split, best):
     return
 
 def generateCeresSegment(runSegments):
-    createBlankSegmentWithName(runSegments, "-Ceres Ridley", "00:00:40.0000000", "00:00:40.0000000")
-    createBlankSegmentWithName(runSegments, "-Ridley Escape", "00:01:20.0000000", "00:00:40.0000000")
-    createBlankSegmentWithName(runSegments, "-Ceres Escape", "00:02:00.0000000", "00:00:40.0000000")
-    createBlankSegmentWithName(runSegments, "{00 - Ceres Escape}Landing Site", CERES_PAD_AMOUNT, "00:00:50.0000000")
+    createBlankSegmentWithName(runSegments, "-Ceres Ridley", "00:00:30.0000000", "00:00:30.0000000")
+    createBlankSegmentWithName(runSegments, "-Ridley Escape", "00:01:00.0000000", "00:00:30.0000000")
+    createBlankSegmentWithName(runSegments, "-Ceres Escape", "00:01:30.0000000", "00:00:30.0000000")
+    createBlankSegmentWithName(runSegments, "{00 - Ceres Escape}Landing Site", CERES_PAD_AMOUNT, "00:00:45.0000000")
     return
 
 def padSplitTime(split):
