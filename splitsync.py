@@ -20,13 +20,20 @@ FILE_PREFIX = "Super Metroid Practice - "
 FILE_REGEX = re.compile("- (\\d{2}) -")
 BLANK_FILE_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <Run version=\"1.7.0\"> <GameIcon></GameIcon> <GameName>Super Metroid</GameName> <CategoryName>Any%</CategoryName> <Metadata> <Run id=\"\" /> <Platform usesEmulator=\"True\">Super Nintendo</Platform> <Region> </Region> <Variables> <Variable name=\"Route\">KPDR</Variable> <Variable name=\"Region\">NTSC</Variable> </Variables> </Metadata> <Offset>00:00:00</Offset> <AttemptCount>0</AttemptCount> <AttemptHistory> </AttemptHistory> <Segments> </Segments> <AutoSplitterSettings /> </Run>"
 BLANK_SEGMENT_XML = "<Segment><Name /><Icon /><SplitTimes><SplitTime><RealTime /></SplitTime></SplitTimes><BestSegmentTime><RealTime /></BestSegmentTime><SegmentHistory /></Segment>"
-CERES_PAD_AMOUNT = "00:02:15.0000000"
+INIT_PAD_AMOUNT = "00:02:15.0000000"
 SEGMENT_PB = "Segment PB"
 
 # fields
 
-padAmount = CERES_PAD_AMOUNT
-
+padAmount = INIT_PAD_AMOUNT
+adjustments = {
+    "Charge Beam Missile": {"diff": "00:00:16.0000000", "isAdd": True, "isUsed": False},
+    "Leaving HJB": {"diff": "00:00:14.0000000", "isAdd": True, "isUsed": False},
+    "West Ocean": {"diff": "00:00:21.0000000", "isAdd": True, "isUsed": False},
+    "Botwoon's Room": {"diff": "00:00:05.0000000", "isAdd": False, "isUsed": False},
+    "The Worst Room in the Game": {"diff": "00:00:10.0000000", "isAdd": True, "isUsed": False},
+    "Metroid Room 2": {"diff": "00:01:10.0000000", "isAdd": True, "isUsed": False}
+}
 
 # functions
 
@@ -105,17 +112,42 @@ def generateCeresSegment(runSegments):
     createBlankSegmentWithName(runSegments, "-Ceres Ridley", "00:00:30.0000000", "00:00:30.0000000")
     createBlankSegmentWithName(runSegments, "-Ridley Escape", "00:01:00.0000000", "00:00:30.0000000")
     createBlankSegmentWithName(runSegments, "-Ceres Escape", "00:01:30.0000000", "00:00:30.0000000")
-    createBlankSegmentWithName(runSegments, "{00 - Ceres Escape}Landing Site", CERES_PAD_AMOUNT, "00:00:45.0000000")
+    createBlankSegmentWithName(runSegments, "{00 - Ceres Escape}Landing Site", "00:02:01.0000000", "00:00:31.0000000")
     return
 
-def padSplitTime(split):
+def padSplitTime(split, adjustment, isAdd = True, updatePadTime = False):
+    global padAmount
     origTime = split.text.split(".")
     dtSplit = datetime.strptime(origTime[0], "%H:%M:%S")
-    padSplit = datetime.strptime(padAmount.split(".")[0], "%H:%M:%S")
-    dtSplit = dtSplit + timedelta(seconds = padSplit.second)
-    dtSplit = dtSplit + timedelta(minutes = padSplit.minute)
-    dtSplit = dtSplit + timedelta(hours = padSplit.hour)
+    padSplit = datetime.strptime(adjustment.split(".")[0], "%H:%M:%S")
+    if isAdd:
+        dtSplit = dtSplit + timedelta(seconds = padSplit.second)
+        dtSplit = dtSplit + timedelta(minutes = padSplit.minute)
+        dtSplit = dtSplit + timedelta(hours = padSplit.hour)
+    else:
+        dtSplit = dtSplit - timedelta(seconds = padSplit.second)
+        dtSplit = dtSplit - timedelta(minutes = padSplit.minute)
+        dtSplit = dtSplit - timedelta(hours = padSplit.hour)
     split.text = dtSplit.strftime("%H:%M:%S") + "." + origTime[1]
+
+    if updatePadTime:
+        print("Updated padTime: " + split.text)
+        padAmount = split.text
+    return
+
+def adjustSplitTime(segmentName, split, isSplit):
+    if segmentName in adjustments.keys():
+        adjustment = adjustments[segmentName]
+        padSplitTime(split, adjustment["diff"], adjustment["isAdd"], isSplit)
+        adjustment["isUsed"] = True
+    return
+
+def validateAllAdjustments():
+    for key in adjustments:
+        if adjustments[key]["isUsed"] == False:
+            print("Failed to find split name to adjust: " + key)
+            print("Aborting...")
+            exit()
     return
 
 def generateRunFile(segmentsPath, segmentFiles):
@@ -140,13 +172,21 @@ def generateRunFile(segmentsPath, segmentFiles):
                     continue
 
             newSegment = ET.fromstring("<Segment />")
+            segName = segments[j].findall("Name")[0].text
             for segNode in segments[j]:
                 if segNode.tag == "SplitTimes":
+                    for time in segNode[0].findall("GameTime"):
+                        segNode[0].remove(time)
+                    
                     newSplitTimes = ET.SubElement(newSegment, "SplitTimes")
                     segNode[0].attrib["name"] = SEGMENT_PB
-                    padSplitTime(segNode[0].findall("RealTime")[0])
+
+                    timeNode = segNode[0].findall("RealTime")[0]
+                    padSplitTime(timeNode, padAmount, True, False)
+                    adjustSplitTime(segName, timeNode, True)
+
                     if j == len(segments) - 1:
-                        padAmount = segNode[0].findall("RealTime")[0].text
+                        padAmount = timeNode.text
                     newSplitTimes.append(segNode[0])
                     continue
                 if segNode.tag == "SegmentHistory":
@@ -160,8 +200,22 @@ def generateRunFile(segmentsPath, segmentFiles):
                     else:
                         name.text = "-" + segNode.text
                     continue
+                if segNode.tag == "BestSegmentTime":
+                    for time in segNode.findall("GameTime"):
+                        segNode.remove(time)
+                    
+                    # Special case from adding Ceres
+                    if segName == "Morph Ball":
+                        padSplitTime(segNode[0], "00:00:14.0000000", True, False)
+                    else:
+                        adjustSplitTime(segName, segNode[0], False)
+
+                    newSegment.append(segNode)
+                    continue
                 newSegment.append(segNode)
             runSegments.append(newSegment)
+
+    validateAllAdjustments()
 
     # pretty up the xml
     ET.indent(runXML)

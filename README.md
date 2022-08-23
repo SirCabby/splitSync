@@ -28,7 +28,8 @@ There are many assumptions that exist depending on the action.
     - **"Super Metroid Practice - ##"** as the prefix, followed by anything else
     - All other files in the directory will be ignored
 2. **Digit Identifiers** - Segment file names include 2 digits as previously mentioned.  These are super important and are used for ordering of segments.
-3. **LiveSplit Settings** - The following settings are defaulted to these values, you may need to tweak manaully if you care about them:
+3. **Split Names** - Split names are expected to be unchanged from the segment files.  These are sometimes used to identify and make adjustments to timings, etc.
+4. **LiveSplit Settings** - The following settings are defaulted to these values, you may need to tweak manaully if you care about them:
     - GameName = "Super Metroid"
     - CategoryName = "Any%"
     - Platform usesEmulator = "True"
