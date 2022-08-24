@@ -123,7 +123,7 @@ def padSplitTime(split, adjustment, isAdd = True):
     if isAdd:
         dtSplit = dtSplit + timedelta(hours = padSplit.hour, minutes = padSplit.minute, seconds = padSplit.second, microseconds = padSplit.microsecond)
     else:
-        dtSplit = padSplit - timedelta(hours = dtSplit.hour, minutes = dtSplit.minute, seconds = dtSplit.second, microseconds = dtSplit.microsecond)
+        dtSplit = dtSplit - timedelta(hours = padSplit.hour, minutes = padSplit.minute, seconds = padSplit.second, microseconds = padSplit.microsecond)
 
     split.text = dtSplit.strftime(format)
     return
@@ -139,8 +139,8 @@ def adjustSplitTime(segmentName, split):
         # We run adjustments twice, one for split and one for segment, don't double pad the padtime
         if isFirstUse:
             padRealTimeXml = ET.fromstring("<RealTime />")
-            padRealTimeXml.text = adjustment["diff"]
-            padSplitTime(padRealTimeXml, padAmount, adjustment["isAdd"])
+            padRealTimeXml.text = padAmount
+            padSplitTime(padRealTimeXml, adjustment["diff"], adjustment["isAdd"])
             padAmount = padRealTimeXml.text
     return
 
@@ -184,7 +184,7 @@ def generateRunFile(segmentsPath, segmentFiles):
                     segNode[0].attrib["name"] = SEGMENT_PB
 
                     timeNode = segNode[0].findall("RealTime")[0]
-                    padSplitTime(timeNode, padAmount, True)
+                    padSplitTime(timeNode, padAmount)
                     adjustSplitTime(segName, timeNode)
 
                     if j == len(segments) - 1:
@@ -209,7 +209,7 @@ def generateRunFile(segmentsPath, segmentFiles):
                     
                     # Special case from adding Ceres
                     if segName == "Morph Ball":
-                        padSplitTime(segNode[0], "00:00:14.0000000", True)
+                        padSplitTime(segNode[0], "00:00:14.0000000")
                     else:
                         adjustSplitTime(segName, segNode[0])
 
