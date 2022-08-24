@@ -117,28 +117,31 @@ def generateCeresSegment(runSegments):
     return
 
 def padSplitTime(split, adjustment, isAdd = True):
-    origTime = split.text.split(".")
-
-    dtSplit = datetime.strptime(origTime[0], "%H:%M:%S")
-    padSplit = datetime.strptime(adjustment.split(".")[0], "%H:%M:%S")
-
+    format = "%H:%M:%S.%f0"
+    dtSplit = datetime.strptime(split.text, format)
+    padSplit = datetime.strptime(adjustment, format)
     if isAdd:
-        dtSplit = dtSplit + timedelta(seconds = padSplit.second)
-        dtSplit = dtSplit + timedelta(minutes = padSplit.minute)
-        dtSplit = dtSplit + timedelta(hours = padSplit.hour)
+        dtSplit = dtSplit + timedelta(hours = padSplit.hour, minutes = padSplit.minute, seconds = padSplit.second, microseconds = padSplit.microsecond)
     else:
-        dtSplit = dtSplit - timedelta(seconds = padSplit.second)
-        dtSplit = dtSplit - timedelta(minutes = padSplit.minute)
-        dtSplit = dtSplit - timedelta(hours = padSplit.hour)
+        dtSplit = padSplit - timedelta(hours = dtSplit.hour, minutes = dtSplit.minute, seconds = dtSplit.second, microseconds = dtSplit.microsecond)
 
-    split.text = dtSplit.strftime("%H:%M:%S") + "." + origTime[1]
+    split.text = dtSplit.strftime(format)
     return
 
 def adjustSplitTime(segmentName, split):
+    global padAmount
     if segmentName in adjustments.keys():
         adjustment = adjustments[segmentName]
+        isFirstUse = not adjustment["isUsed"]
         padSplitTime(split, adjustment["diff"], adjustment["isAdd"])
         adjustment["isUsed"] = True
+
+        # We run adjustments twice, one for split and one for segment, don't double pad the padtime
+        if isFirstUse:
+            padRealTimeXml = ET.fromstring("<RealTime />")
+            padRealTimeXml.text = adjustment["diff"]
+            padSplitTime(padRealTimeXml, padAmount, adjustment["isAdd"])
+            padAmount = padRealTimeXml.text
     return
 
 def validateAllAdjustments():
